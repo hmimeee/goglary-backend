@@ -12,64 +12,20 @@ class AdminSeeder extends Seeder
 {
     public function run(): void
     {
-        // Create permissions
-        $permissions = [
-            // User permissions
-            'view users',
-            'create users',
-            'edit users',
-            'delete users',
-
-            // Product permissions
-            'view products',
-            'create products',
-            'edit products',
-            'delete products',
-
-            // Category permissions
-            'view categories',
-            'create categories',
-            'edit categories',
-            'delete categories',
-
-            // Order permissions
-            'view orders',
-            'create orders',
-            'edit orders',
-            'delete orders',
-
-            // Role permissions
-            'view roles',
-            'create roles',
-            'edit roles',
-            'delete roles',
-
-            // Permission permissions
-            'view permissions',
-            'create permissions',
-            'edit permissions',
-            'delete permissions',
-        ];
-
-        foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission]);
-        }
-
         // Create roles and assign permissions
         $superAdminRole = Role::firstOrCreate(['name' => 'super-admin']);
         $superAdminRole->givePermissionTo(Permission::all());
 
-        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        $adminRole = Role::firstOrCreate(['name' => 'Admin']);
         $adminPermissions = [
             'view users', 'create users', 'edit users',
             'view products', 'create products', 'edit products', 'delete products',
             'view categories', 'create categories', 'edit categories', 'delete categories',
-            'view orders', 'edit orders',
-            'view roles'
+            'view orders', 'edit orders'
         ];
         $adminRole->givePermissionTo($adminPermissions);
 
-        $moderatorRole = Role::firstOrCreate(['name' => 'moderator']);
+        $moderatorRole = Role::firstOrCreate(['name' => 'Moderator']);
         $moderatorPermissions = [
             'view users',
             'view products', 'edit products',
@@ -99,6 +55,8 @@ class AdminSeeder extends Seeder
             ]
         );
         $admin->assignRole('admin');
+
+        $customerRole = Role::firstOrCreate(['name' => 'Customer']);
 
         $this->command->info('Admin seeder completed successfully!');
         $this->command->info('Super Admin: admin@goglary.com / password');

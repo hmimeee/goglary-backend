@@ -55,12 +55,12 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <div class="btn-group" role="group">
-                                            <a href="{{ route('brands.show', $brand) }}" class="btn btn-sm btn-outline-primary" title="View Brand">
+                                        <div class="action-btn-group" role="group" aria-label="Brand actions">
+                                            <a href="{{ route('brands.show', $brand) }}" class="btn action-btn view" title="View Brand">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             @can('edit brands')
-                                            <a href="{{ route('brands.edit', $brand) }}" class="btn btn-sm btn-outline-secondary" title="Edit Brand">
+                                            <a href="{{ route('brands.edit', $brand) }}" class="btn action-btn edit" title="Edit Brand">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             @endcan
@@ -68,7 +68,7 @@
                                             <form action="{{ route('brands.destroy', $brand) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete Brand" onclick="return confirm('Are you sure you want to delete this brand?')">
+                                                <button type="submit" class="btn action-btn delete" title="Delete Brand" onclick="return confirm('Are you sure you want to delete this brand?')">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </form>
@@ -177,15 +177,6 @@
         color: #6c757d;
         background-color: #fff;
         border-color: #dee2e6;
-    }
-
-    .btn-group .btn {
-        border-radius: 6px !important;
-        margin-right: 2px;
-    }
-
-    .btn-group .btn:last-child {
-        margin-right: 0;
     }
 
     .table tbody tr:hover {

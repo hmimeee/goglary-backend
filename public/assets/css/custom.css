@@ -1,3 +1,536 @@
 /*
-Custom Css
+Custom CSS — shared, reusable styles for the admin UI
+--------------------------------------------------------------------
+Notes:
+- These classes are safe to use across pages.
+- Keep selectors specific but flat so they are easy to override if needed.
+--------------------------------------------------------------------
 */
+
+/* Avatar with initial (square with subtle rounding) */
+.avatar-initial {
+	width: 40px;
+	height: 40px;
+	font-size: 16px;
+	border-radius: 8px; /* matches template style */
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* Action buttons — outlined square icon buttons like template */
+.action-btn-group { display: inline-flex; gap: 10px; }
+.action-btn {
+	--btn-size: 44px;
+	width: var(--btn-size);
+	height: var(--btn-size);
+	padding: 0;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 2px solid #ced4da;
+	border-radius: 12px; /* slightly rounded square */
+	background: #fff;
+	box-shadow: 0 2px 0 rgba(0, 0, 0, 0.05);
+	transition: all 0.2s ease-in-out;
+	font-size: 16px;
+	line-height: 1;
+}
+.action-btn i { pointer-events: none; }
+
+/* Variants */
+.action-btn.view { color: #0d6efd; border-color: #0d6efd; }
+.action-btn.view:hover { background-color: #0d6efd; color: #fff; }
+
+.action-btn.edit { color: #6c757d; border-color: #adb5bd; }
+.action-btn.edit:hover { background-color: #6c757d; color: #fff; border-color: #6c757d; }
+
+.action-btn.delete { color: #dc3545; border-color: #dc3545; }
+.action-btn.delete:hover { background-color: #dc3545; color: #fff; }
+
+.action-btn:disabled,
+.action-btn.disabled {
+	color: #adb5bd !important;
+	border-color: #dee2e6 !important;
+	background-color: #fff !important;
+	opacity: 1;
+	cursor: not-allowed;
+	box-shadow: none;
+}
+
+/* Pagination styling consistent with storefront theme */
+.pagination-goglary .page-link {
+	color: #59ab6e;
+	background-color: #fff;
+	border: 1px solid #dee2e6;
+	border-radius: 6px !important;
+	margin: 0 2px;
+	transition: all 0.3s;
+}
+.pagination-goglary .page-link:hover {
+	color: #56ae6c;
+	background-color: #f8f9fa;
+	border-color: #59ab6e;
+}
+.pagination-goglary .page-item.active .page-link {
+	background: linear-gradient(135deg, #59ab6e 0%, #56ae6c 100%);
+	border-color: #59ab6e;
+	color: #fff;
+}
+.pagination-goglary .page-item.disabled .page-link {
+	color: #6c757d;
+	background-color: #fff;
+	border-color: #dee2e6;
+}
+
+/* Breadcrumb Styling */
+.breadcrumb {
+    background: transparent;
+    padding: 0;
+    margin-bottom: 0.5rem;
+}
+
+.breadcrumb-item a {
+    color: #59ab6e;
+    text-decoration: none;
+}
+
+.breadcrumb-item a:hover {
+    color: #56ae6c;
+    text-decoration: underline;
+}
+
+.breadcrumb-item.active {
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: "/";
+    color: #adb5bd;
+    padding: 0 8px;
+}
+
+/* Dashboard cards used across admin pages */
+.stats-card {
+	border: none;
+	border-radius: 12px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	transition: transform 0.3s ease;
+}
+.stats-card:hover { transform: translateY(-2px); }
+
+/* Gradient variant for stats cards — opt-in with .stats-card--gradient */
+.stats-card--gradient.info { background: linear-gradient(135deg, #17a2b8 0%, #138496 100%); color: #fff; }
+.stats-card--gradient.success { background: linear-gradient(135deg, #28a745 0%, #218838 100%); color: #fff; }
+.stats-card--gradient.warning { background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%); color: #fff; }
+.stats-card--gradient.primary { background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); color: #fff; }
+
+.stats-icon {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.2);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 20px;
+}
+
+/*
+Admin Layout Styles
+--------------------------------------------------------------------
+Styles for the admin panel layout and components
+--------------------------------------------------------------------
+*/
+
+/* Admin specific styles */
+.admin-wrapper {
+	min-height: 100vh;
+	background-color: #f8f9fa;
+}
+
+.admin-sidebar {
+	width: 280px;
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100vh;
+	background: linear-gradient(135deg, #212934 0%, #1d242d 100%);
+	color: white;
+	transition: all 0.3s;
+	z-index: 1000;
+	overflow-y: auto;
+	transform: translateX(-100%);
+	padding-bottom: 100px; /* Space for footer */
+}
+
+.admin-sidebar.active {
+	transform: translateX(0);
+}
+
+.admin-sidebar .sidebar-header {
+	padding: 20px;
+	background: rgba(255, 255, 255, 0.1);
+	text-align: center;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-sidebar .sidebar-header h3 {
+	margin: 0;
+	color: #59ab6e;
+	font-weight: 500;
+}
+
+.admin-sidebar .components {
+	padding: 20px 0;
+}
+
+.admin-sidebar .components li {
+	list-style: none;
+	padding: 0;
+}
+
+.admin-sidebar .components li a {
+	display: block;
+	padding: 15px 25px;
+	color: #cfd6e1;
+	text-decoration: none;
+	transition: all 0.3s;
+	border-left: 3px solid transparent;
+}
+
+.admin-sidebar .components li a:hover,
+.admin-sidebar .components li.active a {
+	background: rgba(89, 171, 110, 0.2);
+	color: #59ab6e;
+	border-left-color: #59ab6e;
+	text-decoration: none;
+}
+
+.admin-sidebar .components li.active a {
+	background: rgba(89, 171, 110, 0.3);
+	font-weight: 500;
+}
+
+.admin-content {
+	margin-left: 0;
+	transition: all 0.3s;
+}
+
+.admin-content.active {
+	margin-left: 280px;
+}
+
+/* Desktop styles */
+@media (min-width: 769px) {
+	.admin-sidebar {
+		transform: translateX(0);
+	}
+
+	.admin-content {
+		margin-left: 280px;
+	}
+
+	.admin-sidebar.active {
+		transform: translateX(-100%);
+	}
+
+	.admin-content.active {
+		margin-left: 0;
+	}
+}
+
+.admin-navbar {
+	background: white !important;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	padding: 15px 30px;
+}
+
+.admin-navbar .navbar-brand {
+	color: #59ab6e !important;
+	font-weight: 500;
+}
+
+.stats-card {
+	background: white;
+	border-radius: 10px;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+	border: none;
+	transition: transform 0.3s ease;
+}
+
+.stats-card:hover {
+	transform: translateY(-5px);
+}
+
+.stats-card .card-body {
+	padding: 25px;
+}
+
+.stats-card .stats-icon {
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 24px;
+}
+
+.stats-card.primary .stats-icon {
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	color: white;
+}
+
+.stats-card.success .stats-icon {
+	background: linear-gradient(135deg, #59ab6e 0%, #56ae6c 100%);
+	color: white;
+}
+
+.stats-card.warning .stats-icon {
+	background: linear-gradient(135deg, #ede861 0%, #f4c430 100%);
+	color: white;
+}
+
+.stats-card.info .stats-icon {
+	background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+	color: white;
+}
+
+.table-card {
+	background: white;
+	border-radius: 10px;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+	border: none;
+	overflow: hidden;
+}
+
+.table-card .card-header {
+	background: linear-gradient(135deg, #59ab6e 0%, #56ae6c 100%);
+	color: white;
+	padding: 20px 25px;
+	border: none;
+}
+
+.table-card .card-header h6 {
+	margin: 0;
+	font-weight: 500;
+}
+
+.table-card .table {
+	margin: 0;
+}
+
+.table-card .table thead th {
+	background: #f8f9fa;
+	border: none;
+	font-weight: 600;
+	color: #212934;
+	padding: 15px;
+}
+
+.table-card .table tbody td {
+	padding: 15px;
+	border: none;
+	vertical-align: middle;
+}
+
+.btn-goglary {
+	background: linear-gradient(135deg, #59ab6e 0%, #56ae6c 100%);
+	border: none;
+	color: white;
+	padding: 10px 20px;
+	border-radius: 6px;
+	font-weight: 500;
+	transition: all 0.3s;
+}
+
+.btn-goglary:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 5px 15px rgba(89, 171, 110, 0.4);
+	color: white;
+}
+
+.badge-goglary {
+	background: linear-gradient(135deg, #59ab6e 0%, #56ae6c 100%);
+	color: white;
+	padding: 5px 10px;
+	border-radius: 20px;
+	font-size: 12px;
+}
+
+/* Button group improvements */
+.btn-group .btn {
+	border-radius: 0;
+	margin: 0;
+}
+
+.btn-group .btn:first-child {
+	border-top-left-radius: 6px;
+	border-bottom-left-radius: 6px;
+}
+
+.btn-group .btn:last-child {
+	border-top-right-radius: 6px;
+	border-bottom-right-radius: 6px;
+}
+
+.btn-group .btn:not(:last-child) {
+	border-right: none;
+}
+
+.btn-group .btn:hover {
+	z-index: 2;
+}
+
+/* Tooltip improvements */
+.tooltip-inner {
+	background-color: #212934;
+	color: white;
+	border-radius: 6px;
+	font-size: 12px;
+}
+
+.tooltip.bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before,
+.tooltip.bs-tooltip-top .tooltip-arrow::before {
+	border-top-color: #212934;
+}
+
+.tooltip.bs-tooltip-auto[data-popper-placement^=bottom] .tooltip-arrow::before,
+.tooltip.bs-tooltip-bottom .tooltip-arrow::before {
+	border-bottom-color: #212934;
+}
+
+.tooltip.bs-tooltip-auto[data-popper-placement^=left] .tooltip-arrow::before,
+.tooltip.bs-tooltip-left .tooltip-arrow::before {
+	border-left-color: #212934;
+}
+
+.tooltip.bs-tooltip-auto[data-popper-placement^=right] .tooltip-arrow::before,
+.tooltip.bs-tooltip-right .tooltip-arrow::before {
+	border-right-color: #212934;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+	/* No additional styles needed */
+}
+
+/* Custom scrollbar */
+.admin-sidebar::-webkit-scrollbar {
+	width: 6px;
+}
+
+.admin-sidebar::-webkit-scrollbar-track {
+	background: rgba(255, 255, 255, 0.1);
+}
+
+.admin-sidebar::-webkit-scrollbar-thumb {
+	background: #59ab6e;
+	border-radius: 3px;
+}
+
+.admin-sidebar::-webkit-scrollbar-thumb:hover {
+	background: #56ae6c;
+}
+
+/* Sidebar divider */
+.sidebar-divider {
+	margin: 15px 25px;
+	border: 0;
+	border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Sidebar footer */
+.sidebar-footer {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 10px;
+	background: rgba(255, 255, 255, 0.1);
+	border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-footer .footer-icons {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.sidebar-footer .footer-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	border-radius: 10px;
+	color: #cfd6e1;
+	text-decoration: none;
+	transition: all 0.3s;
+	font-size: 18px;
+}
+
+.sidebar-footer .footer-icon:hover {
+	background: rgba(89, 171, 110, 0.3);
+	color: #59ab6e;
+	transform: translateY(-2px);
+}
+
+.sidebar-footer .footer-icon.store:hover {
+	background: rgba(23, 162, 184, 0.3);
+	color: #17a2b8;
+}
+
+/* Product image gallery styling */
+.image-container {
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.image-container:hover {
+    border-color: #dee2e6;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.image-container.primary-image {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+}
+
+.image-container img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.remove-btn {
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.remove-btn:hover {
+    opacity: 1;
+}
+
+/* Mobile image gallery adjustments */
+@media (max-width: 768px) {
+    .image-container img {
+        height: 100px;
+    }
+}/* Mobile sidebar adjustments */
+@media (max-width: 768px) {
+	.sidebar-footer {
+		position: static;
+		margin-top: 20px;
+		border-top: 1px solid rgba(255, 255, 255, 0.2);
+	}
+
+	.sidebar-footer .footer-icons {
+		justify-content: center;
+		gap: 20px;
+	}
+}

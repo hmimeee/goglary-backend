@@ -124,7 +124,7 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                <a href="{{ route('products.show', $product) }}" class="btn btn-sm btn-outline-primary">
+                                                <a href="{{ route('products.show', $product) }}" class="btn action-btn view">
                                                     <i class="fas fa-eye"></i> View
                                                 </a>
                                             </td>

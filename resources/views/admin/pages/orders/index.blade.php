@@ -62,11 +62,11 @@
                                     </td>
                                     <td>{{ $order->created_at->format('M d, Y') }}</td>
                                     <td>
-                                        <div class="btn-group" role="group">
-                                            <a href="{{ route('orders.show', $order) }}" class="btn btn-sm btn-outline-primary" title="View Order">
+                                        <div class="action-btn-group" role="group" aria-label="Order actions">
+                                            <a href="{{ route('orders.show', $order) }}" class="btn action-btn view" title="View Order">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="{{ route('orders.edit', $order) }}" class="btn btn-sm btn-outline-secondary" title="Edit Order">
+                                            <a href="{{ route('orders.edit', $order) }}" class="btn action-btn edit" title="Edit Order">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                         </div>
@@ -168,15 +168,6 @@
         color: #6c757d;
         background-color: #fff;
         border-color: #dee2e6;
-    }
-
-    .btn-group .btn {
-        border-radius: 6px !important;
-        margin-right: 2px;
-    }
-
-    .btn-group .btn:last-child {
-        margin-right: 0;
     }
 
     .table tbody tr:hover {

@@ -205,7 +205,7 @@
                                         <small class="text-muted">{{ $order->created_at->format('M d, Y') }}</small>
                                     </td>
                                     <td>
-                                        <a href="{{ route('orders.show', $order) }}" class="btn btn-outline-primary btn-sm">
+                                        <a href="{{ route('orders.show', $order) }}" class="btn action-btn view">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                     </td>

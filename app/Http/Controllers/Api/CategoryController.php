@@ -16,12 +16,10 @@ class CategoryController extends Controller
     {
         $query = Category::active()
             ->ordered()
+            ->when($request->limit, function ($q) use ($request) {
+                $q->limit((int) $request->limit);
+            })
             ->withCount('products');
-
-        // Apply limit if specified
-        if ($request->has('limit') && $request->limit) {
-            $query->limit((int) $request->limit);
-        }
 
         $categories = $query->get()
             ->map(function ($category) {

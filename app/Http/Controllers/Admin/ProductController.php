@@ -36,9 +36,6 @@ class ProductController extends Controller
         return view('admin.pages.products.create', compact('categories', 'brands'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -48,7 +45,9 @@ class ProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'brand_id' => 'nullable|exists:brands,id',
             'stock_quantity' => 'required|integer|min:0',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'primary_image' => 'nullable|integer|min:0',
             'is_active' => 'required|boolean',
         ]);
 
@@ -60,10 +59,14 @@ class ProductController extends Controller
         // Set in_stock based on stock_quantity
         $data['in_stock'] = $data['stock_quantity'] > 0;
 
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products', 'public');
-            $data['images'] = [$imagePath];
+        // Handle multiple image uploads
+        if ($request->hasFile('images')) {
+            $uploadedImages = [];
+            foreach ($request->file('images') as $file) {
+                $imagePath = $file->store('products', 'public');
+                $uploadedImages[] = $imagePath;
+            }
+            $data['images'] = $uploadedImages;
         }
 
         $product = Product::create($data);
@@ -93,9 +96,6 @@ class ProductController extends Controller
         return view('admin.pages.products.edit', compact('product', 'categories', 'brands'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Product $product)
     {
         $request->validate([
@@ -105,8 +105,23 @@ class ProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'brand_id' => 'nullable|exists:brands,id',
             'stock_quantity' => 'required|integer|min:0',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'remove_images' => 'nullable|string',
+            'primary_image' => 'nullable|integer|min:0',
             'is_active' => 'required|boolean',
+        ], [], [
+            'name' => 'Product Name',
+            'description' => 'Product Description',
+            'price' => 'Product Price',
+            'category_id' => 'Category',
+            'brand_id' => 'Brand',
+            'stock_quantity' => 'Stock Quantity',
+            'images' => 'Product Images',
+            'images.*' => 'Product Image '. (intval(':position') + 1),
+            'remove_images' => 'Remove Images',
+            'primary_image' => 'Primary Image',
+            'is_active' => 'Active Status',
         ]);
 
         $data = $request->only([
@@ -117,17 +132,51 @@ class ProductController extends Controller
         // Set in_stock based on stock_quantity
         $data['in_stock'] = $data['stock_quantity'] > 0;
 
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            // Delete old images
-            if ($product->images) {
-                foreach ($product->images as $oldImage) {
-                    Storage::disk('public')->delete($oldImage);
+        // Handle image removal
+        $currentImages = $product->images ?? [];
+
+        if ($request->has('remove_images') && !empty($request->remove_images)) {
+            $removeIndices = explode(',', $request->remove_images);
+
+            foreach ($removeIndices as $index) {
+                if (isset($currentImages[$index])) {
+                    Storage::disk('public')->delete($currentImages[$index]);
+                    unset($currentImages[$index]);
                 }
             }
+            // Reindex array
+            $currentImages = array_values($currentImages);
+        }
 
-            $imagePath = $request->file('image')->store('products', 'public');
-            $data['images'] = [$imagePath];
+        // Handle new image uploads
+        if ($request->hasFile('images')) {
+            $uploadedImages = [];
+            foreach ($request->file('images') as $file) {
+                $imagePath = $file->store('products', 'public');
+                $uploadedImages[] = $imagePath;
+            }
+
+            // Combine existing images with new uploads
+            $currentImages = array_merge($currentImages, $uploadedImages);
+        }
+
+        // Handle primary image setting
+        if ($request->has('primary_image') && !empty($request->primary_image)) {
+            $primaryIndex = (int) $request->primary_image;
+            if (isset($currentImages[$primaryIndex])) {
+                // Move the selected image to the front (make it primary)
+                $primaryImage = $currentImages[$primaryIndex];
+                unset($currentImages[$primaryIndex]);
+                array_unshift($currentImages, $primaryImage);
+            }
+        }
+
+        // Update images array
+        if (!empty($currentImages)) {
+            $data['images'] = array_values($currentImages);
+        } elseif (empty($currentImages) && !$request->hasFile('images')) {
+            // Keep existing images if no new images and no removals
+            $data['images'] = $currentImages;
         }
 
         $product->update($data);

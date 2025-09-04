@@ -22,7 +22,7 @@
                         <div class="row">
                             <div class="col-md-8">
                                 <div class="mb-3">
-                                    <label for="name" class="form-label">Product Name *</label>
+                                    <label for="name" class="form-label required">Product Name</label>
                                     <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" required>
                                     @error('name')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -40,7 +40,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="price" class="form-label">Price *</label>
+                                            <label for="price" class="form-label required">Price</label>
                                             <input type="number" step="0.01" class="form-control @error('price') is-invalid @enderror" id="price" name="price" value="{{ old('price') }}" required>
                                             @error('price')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -49,7 +49,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="stock_quantity" class="form-label">Stock Quantity *</label>
+                                            <label for="stock_quantity" class="form-label required">Stock Quantity</label>
                                             <input type="number" class="form-control @error('stock_quantity') is-invalid @enderror" id="stock_quantity" name="stock_quantity" value="{{ old('stock_quantity', 0) }}" required>
                                             @error('stock_quantity')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -61,7 +61,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="category_id" class="form-label">Category *</label>
+                                            <label for="category_id" class="form-label required">Category</label>
                                             <select class="form-select @error('category_id') is-invalid @enderror" id="category_id" name="category_id" required>
                                                 <option value="">Select Category</option>
                                                 @foreach($categories as $category)
@@ -105,18 +105,18 @@
 
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label for="image" class="form-label">Product Image</label>
-                                    <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image" accept="image/*">
-                                    @error('image')
+                                    <label for="images" class="form-label required">Product Images</label>
+                                    <input type="file" class="form-control @error('images') is-invalid @enderror" id="images" name="images[]" accept="image/*" multiple required>
+                                    @error('images')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
-                                    <div class="form-text">Supported formats: JPG, PNG, GIF. Max size: 2MB</div>
+                                    <div class="form-text">Supported formats: JPG, PNG, GIF. Max size: 2MB each. You can select multiple images.</div>
                                 </div>
 
                                 <div id="image-preview" class="mb-3" style="display: none;">
                                     <label class="form-label">Image Preview</label>
                                     <div class="border rounded p-2">
-                                        <img id="preview-img" src="" alt="Preview" class="img-fluid">
+                                        <div id="preview-container" class="row g-2"></div>
                                     </div>
                                 </div>
                             </div>
@@ -139,18 +139,37 @@
 
 @push('scripts')
 <script>
-    // Image preview
-    document.getElementById('image').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('preview-img').src = e.target.result;
-                document.getElementById('image-preview').style.display = 'block';
-            };
-            reader.readAsDataURL(file);
+    // Multiple image preview
+    document.getElementById('images').addEventListener('change', function(e) {
+        const files = e.target.files;
+        const previewContainer = document.getElementById('preview-container');
+        const imagePreviewDiv = document.getElementById('image-preview');
+
+        if (files.length > 0) {
+            previewContainer.innerHTML = '<div class="col-12 mb-2"><small class="text-muted">Selected images:</small></div>';
+
+            Array.from(files).forEach((file, index) => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const imageHtml = `
+                            <div class="col-6 col-md-4">
+                                <div class="position-relative">
+                                    <img src="${e.target.result}" alt="Preview ${index + 1}" class="img-fluid rounded">
+                                    <span class="badge bg-success position-absolute top-0 end-0 m-1">New</span>
+                                </div>
+                            </div>
+                        `;
+                        previewContainer.insertAdjacentHTML('beforeend', imageHtml);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            imagePreviewDiv.style.display = 'block';
         } else {
-            document.getElementById('image-preview').style.display = 'none';
+            imagePreviewDiv.style.display = 'none';
+            previewContainer.innerHTML = '';
         }
     });
 </script>

@@ -7,50 +7,50 @@
         <!-- User Statistics -->
         <div class="row mt-4">
             <div class="col-md-3 mb-3">
-                <div class="card stats-card info h-100">
+                <div class="card stats-card stats-card--gradient info h-100">
                     <div class="card-body text-center">
                         <div class="stats-icon mx-auto mb-2">
                             <i class="fas fa-users"></i>
                         </div>
                         <h4 class="mb-1">{{ $users->total() }}</h4>
-                        <small class="text-muted">Total Users</small>
+                        <small class="text-white">Total Users</small>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-3 mb-3">
-                <div class="card stats-card success h-100">
+                <div class="card stats-card stats-card--gradient success h-100">
                     <div class="card-body text-center">
                         <div class="stats-icon mx-auto mb-2">
                             <i class="fas fa-check-circle"></i>
                         </div>
                         <h4 class="mb-1">{{ $users->where('email_verified_at', '!=', null)->count() }}</h4>
-                        <small class="text-muted">Verified Users</small>
+                        <small class="text-white">Verified Users</small>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-3 mb-3">
-                <div class="card stats-card warning h-100">
+                <div class="card stats-card stats-card--gradient warning h-100">
                     <div class="card-body text-center">
                         <div class="stats-icon mx-auto mb-2">
                             <i class="fas fa-clock"></i>
                         </div>
                         <h4 class="mb-1">{{ $users->where('email_verified_at', null)->count() }}</h4>
-                        <small class="text-muted">Pending Verification</small>
+                        <small class="text-white">Pending Verification</small>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-3 mb-3">
-                <div class="card stats-card primary h-100">
+                <div class="card stats-card stats-card--gradient primary h-100">
                     <div class="card-body text-center">
                         <div class="stats-icon mx-auto mb-2">
                             <i class="fas fa-user-shield"></i>
                         </div>
                         <h4 class="mb-1">
                             {{ $users->filter(function ($user) {return $user->roles->count() > 0;})->count() }}</h4>
-                        <small class="text-muted">Users with Roles</small>
+                        <small class="text-white">Users with Roles</small>
                     </div>
                 </div>
             </div>
@@ -91,20 +91,19 @@
                                             </td>
                                             <td>
                                                 <div class="d-flex align-items-center">
-                                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
-                                                        style="width: 40px; height: 40px; font-size: 16px; border-radius: 8px;">
+                                                    <div class="bg-primary text-white d-flex align-items-center justify-content-center me-3 avatar-initial">
                                                         {{ strtoupper(substr($user->name, 0, 1)) }}
                                                     </div>
                                                     <div>
                                                         <div class="fw-bold">{{ $user->name }}</div>
-                                                        <small class="text-muted">{{ $user->email }}</small>
+                                                        <small class="text-white">{{ $user->email }}</small>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td>{{ $user->email }}</td>
                                             <td>
                                                 @foreach ($user->roles as $role)
-                                                    <span class="badge badge-goglary me-1">{{ $role->name }}</span>
+                                                    <span class="badge badge-goglary me-1 text-capitalize">{{ $role->name }}</span>
                                                 @endforeach
                                                 @if ($user->roles->isEmpty())
                                                     <span class="badge bg-secondary">No Role</span>
@@ -119,31 +118,31 @@
                                             </td>
                                             <td>{{ $user->created_at->format('M d, Y') }}</td>
                                             <td>
-                                                <div class="btn-group" role="group">
+                                                <div class="action-btn-group" role="group" aria-label="User actions">
                                                     @can('view users')
-                                                        <a href="{{ route('users.show', $user) }}"
-                                                            class="btn btn-sm btn-outline-primary" title="View User">
+                                                        <a href="{{ route('users.show', $user) }}" class="btn action-btn view" title="View User">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
                                                     @endcan
                                                     @can('edit users')
-                                                        <a href="{{ route('users.edit', $user) }}"
-                                                            class="btn btn-sm btn-outline-secondary" title="Edit User">
+                                                        <a href="{{ route('users.edit', $user) }}" class="btn action-btn edit" title="Edit User">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
                                                     @endcan
                                                     @can('delete users')
                                                         @if ($user->id !== auth()->id())
-                                                            <form method="POST" action="{{ route('users.destroy', $user) }}"
-                                                                class="d-inline">
+                                                            <form method="POST" action="{{ route('users.destroy', $user) }}" class="d-inline">
                                                                 @csrf
                                                                 @method('DELETE')
-                                                                <button type="submit" class="btn btn-sm btn-outline-danger"
-                                                                    title="Delete User"
+                                                                <button type="submit" class="btn action-btn delete" title="Delete User"
                                                                     onclick="return confirm('Are you sure you want to delete this user?')">
                                                                     <i class="fas fa-trash"></i>
                                                                 </button>
                                                             </form>
+                                                        @else
+                                                            <button type="button" class="btn action-btn delete" title="Cannot delete your own account" disabled>
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
                                                         @endif
                                                     @endcan
                                                 </div>
@@ -152,9 +151,9 @@
                                     @empty
                                         <tr>
                                             <td colspan="7" class="text-center py-5">
-                                                <i class="fas fa-users fa-3x text-muted mb-3"></i>
-                                                <h5 class="text-muted">No users found</h5>
-                                                <p class="text-muted">Start by creating your first user.</p>
+                                                <i class="fas fa-users fa-3x text-white mb-3"></i>
+                                                <h5 class="text-white">No users found</h5>
+                                                <p class="text-white">Start by creating your first user.</p>
                                                 @can('create users')
                                                     <a href="{{ route('users.create') }}" class="btn btn-goglary">
                                                         <i class="fas fa-plus me-2"></i>Add New User
@@ -223,90 +222,4 @@
             </div>
         </div>
     </div>
-
-    @push('styles')
-        <style>
-            .pagination-goglary .page-link {
-                color: #59ab6e;
-                background-color: #fff;
-                border: 1px solid #dee2e6;
-                border-radius: 6px !important;
-                margin: 0 2px;
-                transition: all 0.3s;
-            }
-
-            .pagination-goglary .page-link:hover {
-                color: #56ae6c;
-                background-color: #f8f9fa;
-                border-color: #59ab6e;
-            }
-
-            .pagination-goglary .page-item.active .page-link {
-                background: linear-gradient(135deg, #59ab6e 0%, #56ae6c 100%);
-                border-color: #59ab6e;
-                color: white;
-            }
-
-            .pagination-goglary .page-item.disabled .page-link {
-                color: #6c757d;
-                background-color: #fff;
-                border-color: #dee2e6;
-            }
-
-            .btn-group .btn {
-                border-radius: 6px !important;
-                margin-right: 2px;
-            }
-
-            .btn-group .btn:last-child {
-                margin-right: 0;
-            }
-
-            .table tbody tr:hover {
-                background-color: #f8f9fa;
-            }
-
-            .stats-card {
-                border: none;
-                border-radius: 12px;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-                transition: transform 0.3s ease;
-            }
-
-            .stats-card:hover {
-                transform: translateY(-2px);
-            }
-
-            .stats-card.info {
-                background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
-                color: white;
-            }
-
-            .stats-card.success {
-                background: linear-gradient(135deg, #28a745 0%, #218838 100%);
-                color: white;
-            }
-
-            .stats-card.warning {
-                background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
-                color: white;
-            }
-
-            .stats-card.primary {
-                background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-                color: white;
-            }
-
-            .stats-icon {
-                width: 50px;
-                height: 50px;
-                border-radius: 50%;
-                background: rgba(255, 255, 255, 0.2);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 20px;
-            }
-        </style>
-    @endpush
 @endsection

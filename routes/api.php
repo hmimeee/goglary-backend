@@ -22,6 +22,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('info', function() {
+    return settings_group('general', 'contact', 'social');
+});
+
 // Public API routes (read-only for frontend)
 Route::apiResource('categories', CategoryController::class)->only(['index', 'show']);
 Route::apiResource('brands', BrandController::class)->only(['index', 'show']);

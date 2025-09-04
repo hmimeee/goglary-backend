@@ -23,7 +23,7 @@
                         <div class="row">
                             <div class="col-md-8">
                                 <div class="mb-3">
-                                    <label for="name" class="form-label">Category Name *</label>
+                                    <label for="name" class="form-label required">Category Name</label>
                                     <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', $category->name) }}" required>
                                     @error('name')
                                         <div class="invalid-feedback">{{ $message }}</div>

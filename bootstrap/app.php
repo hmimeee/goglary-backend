@@ -15,7 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
-            'super-admin-or-permission' => \App\Http\Middleware\SuperAdminOrPermission::class,
+            'access' => \App\Http\Middleware\SuperAdminOrPermission::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

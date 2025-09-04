@@ -26,14 +26,28 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Product Image</label>
+                                <label class="form-label fw-bold">Product Images</label>
                                 <div class="border rounded p-3">
                                     @if($product->images && count($product->images) > 0)
-                                        <img src="{{ asset('storage/' . $product->images[0]) }}" alt="{{ $product->name }}" class="img-fluid rounded">
+                                        <div class="row g-2">
+                                            @foreach($product->images as $index => $image)
+                                                <div class="col-6">
+                                                    <div class="position-relative">
+                                                        <img src="{{ asset('storage/' . $image) }}" alt="{{ $product->name }}" class="img-fluid rounded">
+                                                        @if($index === 0)
+                                                            <span class="badge bg-primary position-absolute top-0 start-0 m-1">Primary</span>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                        <div class="mt-2">
+                                            <small class="text-muted">{{ count($product->images) }} image(s)</small>
+                                        </div>
                                     @else
                                         <div class="text-center text-muted py-5">
                                             <i class="fas fa-image fa-4x"></i>
-                                            <p class="mt-2">No image uploaded</p>
+                                            <p class="mt-2">No images uploaded</p>
                                         </div>
                                     @endif
                                 </div>

@@ -70,12 +70,12 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <div class="btn-group" role="group">
-                                            <a href="{{ route('products.show', $product) }}" class="btn btn-sm btn-outline-primary" title="View Product">
+                                        <div class="action-btn-group" role="group" aria-label="Product actions">
+                                            <a href="{{ route('products.show', $product) }}" class="btn action-btn view" title="View Product">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             @can('edit products')
-                                            <a href="{{ route('products.edit', $product) }}" class="btn btn-sm btn-outline-secondary" title="Edit Product">
+                                            <a href="{{ route('products.edit', $product) }}" class="btn action-btn edit" title="Edit Product">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             @endcan
@@ -83,7 +83,7 @@
                                             <form action="{{ route('products.destroy', $product) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete Product" onclick="return confirm('Are you sure you want to delete this product?')">
+                                                <button type="submit" class="btn action-btn delete" title="Delete Product" onclick="return confirm('Are you sure you want to delete this product?')">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </form>
@@ -192,15 +192,6 @@
         color: #6c757d;
         background-color: #fff;
         border-color: #dee2e6;
-    }
-
-    .btn-group .btn {
-        border-radius: 6px !important;
-        margin-right: 2px;
-    }
-
-    .btn-group .btn:last-child {
-        margin-right: 0;
     }
 
     .table tbody tr:hover {

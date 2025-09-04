@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Product extends Model
@@ -71,6 +72,14 @@ class Product extends Model
                 $product->slug = Str::slug($product->name);
             }
         });
+    }
+
+    public function getImagesAttribute($value)
+    {
+        $images = $value ? json_decode($value, true) : [];
+        return collect($images)->filter()->map(function ($img) {
+            return url(Storage::url($img));
+        })->values();
     }
 
     // Relationships
